@@ -10,6 +10,7 @@
 		C98091881F1144BF00270796 /* MaybeRequired.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C980917E1F1144BF00270796 /* MaybeRequired.framework */; };
 		C980918D1F1144BF00270796 /* MaybeRequiredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */; };
 		C980918F1F1144C000270796 /* MaybeRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = C98091811F1144BF00270796 /* MaybeRequired.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C98091991F11457500270796 /* MaybeRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98091981F11457500270796 /* MaybeRequired.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		C98091871F1144BF00270796 /* MaybeRequiredTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaybeRequiredTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaybeRequiredTests.swift; sourceTree = "<group>"; };
 		C980918E1F1144C000270796 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C98091981F11457500270796 /* MaybeRequired.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeRequired.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		C98091801F1144BF00270796 /* MaybeRequired */ = {
 			isa = PBXGroup;
 			children = (
+				C98091981F11457500270796 /* MaybeRequired.swift */,
 				C98091811F1144BF00270796 /* MaybeRequired.h */,
 				C98091821F1144BF00270796 /* Info.plist */,
 			);
@@ -149,6 +152,7 @@
 					C980917D1F1144BF00270796 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = JQ7925Z798;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					C98091861F1144BF00270796 = {
@@ -198,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C98091991F11457500270796 /* MaybeRequired.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +329,7 @@
 		C98091931F1144C000270796 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JQ7925Z798;
@@ -336,6 +342,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpolzin.MaybeRequired;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -343,6 +350,7 @@
 		C98091941F1144C000270796 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JQ7925Z798;
@@ -362,6 +370,7 @@
 		C98091961F1144C000270796 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = JQ7925Z798;
 				INFOPLIST_FILE = MaybeRequiredTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -374,6 +383,7 @@
 		C98091971F1144C000270796 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = JQ7925Z798;
 				INFOPLIST_FILE = MaybeRequiredTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -402,6 +412,7 @@
 				C98091941F1144C000270796 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C98091951F1144C000270796 /* Build configuration list for PBXNativeTarget "MaybeRequiredTests" */ = {
 			isa = XCConfigurationList;
@@ -410,6 +421,7 @@
 				C98091971F1144C000270796 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

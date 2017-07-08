@@ -3,7 +3,6 @@
 //  MaybeRequired
 //
 //  Created by Mathew Polzin on 7/8/17.
-//  Copyright © 2017 Mathew Polzin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

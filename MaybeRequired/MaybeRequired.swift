@@ -66,6 +66,25 @@ public extension MaybeRequired {
 	}
 }
 
+// NOTE: With Swift 4, the following will be allowed:
+//extension MaybeRequired: Equatable where SomeType: Equatable {
+
+extension MaybeRequired where SomeType: Equatable {
+	public static func ==(lhs: MaybeRequired, rhs: MaybeRequired) -> Bool {
+		switch lhs {
+		case .none(let leftValue):
+			guard case .none(let rightValue) = rhs else { return false }
+			
+			return leftValue == rightValue
+			
+		case .some(let leftValue):
+			guard case .some(let rightValue) = rhs else { return false }
+			
+			return leftValue == rightValue
+		}
+	}
+}
+
 extension MaybeRequired: CustomStringConvertible {
 	public var description: String {
 		switch self {
@@ -77,7 +96,7 @@ extension MaybeRequired: CustomStringConvertible {
 	}
 }
 
-public protocol Necessity {
+public protocol Necessity: Equatable {
 	var necessity: MaybeNecessary { get }
 }
 
