@@ -1,3 +1,10 @@
+//
+//  Necessity.swift
+//  MaybeRequired
+//
+//  Created by Mathew Polzin on 7/8/17.
+//
+
 import Foundation
 
 /// A `MaybeRequired` value is one of:
@@ -25,6 +32,10 @@ public extension MaybeRequired where NoneType: StrictNecessity {
 	/// Create a `MaybeRequired` value with the specified necessity.
 	///
 	/// If your `Optional` is `.some` then the `MaybeRequired` will be as well.
+	///
+	/// If your `Optional` is `.none` then a `MaybeRequired<Necessary, _>` will
+	/// be `.none(.necessary)` and a `MaybeRequired<Unnecessary, _>` will be
+	/// `.none(.unnecessary)`
 	public init(_ value: SomeType?) {
 		guard let trueValue = value else {
 			self = .none(NoneType())
@@ -85,6 +96,7 @@ extension MaybeRequired where SomeType: Equatable {
 	}
 }
 
+
 extension MaybeRequired: CustomStringConvertible {
 	public var description: String {
 		switch self {
@@ -92,69 +104,6 @@ extension MaybeRequired: CustomStringConvertible {
 			return ".none(\(noneValue))"
 		case .some(let someValue):
 			return ".some(\(someValue))"
-		}
-	}
-}
-
-public protocol Necessity: Equatable {
-	var necessity: MaybeNecessary { get }
-}
-
-/// Strict Necessities can be initialized with no arguments to a default value.
-///
-/// The intention is for this to be reasonable only because they have one, and
-/// only one, possible value.
-public protocol StrictNecessity: Necessity {
-	init()
-}
-
-public enum Unnecessary: StrictNecessity {
-	case unnecessary
-	
-	public var necessity: MaybeNecessary { return .unnecessary }
-	
-	public init() {
-		self = .unnecessary
-	}
-}
-
-extension Unnecessary: CustomStringConvertible {
-	public var description: String {
-		return ".unnecessary"
-	}
-}
-
-public enum Necessary: StrictNecessity {
-	case necessary
-	
-	public var necessity: MaybeNecessary { return .necessary }
-	
-	public init() {
-		self = .necessary
-	}
-}
-
-extension Necessary: CustomStringConvertible {
-	public var description: String {
-		return ".necessary"
-	}
-}
-
-public enum MaybeNecessary: Necessity {
-	case unnecessary
-	case necessary
-	
-	public var necessity: MaybeNecessary { return self }
-}
-
-extension MaybeNecessary: CustomStringConvertible {
-	public var description: String {
-		switch self {
-		case .unnecessary:
-			return "MaybeNecessary.unnecessary"
-			
-		case .necessary:
-			return "MaybeNecessary.necessary"
 		}
 	}
 }
