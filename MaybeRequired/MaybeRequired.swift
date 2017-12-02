@@ -1,5 +1,5 @@
 //
-//  Necessity.swift
+//  MaybeRequired.swift
 //  MaybeRequired
 //
 //  Created by Mathew Polzin on 7/8/17.
@@ -7,35 +7,41 @@
 
 import Foundation
 
+/// A `Required<T>` value is either `.some(T)` or `.none(.bad)`
+public typealias Required<T> = MaybeRequired<BadIntegrity, T>
+
+/// A `NotRequired<T>` value is either `.some(T)` or `.none(.good)`
+public typealias NotRequired<T> = MaybeRequired<GoodIntegrity, T>
+
 /// A `MaybeRequired` value is one of:
 /// - `.some(T)`
-/// - `.none(Necessity)`
+/// - `.none(Integrity)`
 ///
-/// The builtin necessities are `Necessary` and `Unnecessary` which get you
-/// `.none(.necessary)` and `.none(.unnecessary)`, respectively.
+/// The builtin integrities are `BadIntegrity` and `GoodIntegrity` which get you
+/// `.none(.bad)` and `.none(.good)`, respectively.
 ///
-/// If you `flatMap` from one `MaybeRequired<Necessary, _>` to another,
-/// your result will be a `MaybeRequired<Necessary, _>`. 
+/// If you `flatMap` from one `MaybeRequired<BadIntegrity, _>` to another,
+/// your result will be a `MaybeRequired<BadIntegrity, _>`.
 ///
-/// If you `flatMap` from one `MaybeRequired<Unnecessary, _>` to another your 
-/// result will be a `MaybeRequired<Unnecessary, _>`. 
+/// If you `flatMap` from one `MaybeRequired<GoodIntegrity, _>` to another your
+/// result will be a `MaybeRequired<GoodIntegrity, _>`.
 ///
-/// However, if you `flatMap` from a `Necessary` to an `Unnecessary` or 
-/// vice versa then your result will be a `MaybeRequired<MaybeNecessary, _>`.
-public enum MaybeRequired<NoneType: Necessity, SomeType> {
+/// However, if you `flatMap` from a `BadIntegrity` to a `GoodIntegrity` or
+/// vice versa then your result will be a `MaybeRequired<MaybeOK, _>`.
+public enum MaybeRequired<NoneType: Integrity, SomeType> {
 	case none(NoneType)
 	case some(SomeType)
 }
 
-public extension MaybeRequired where NoneType: StrictNecessity {
+public extension MaybeRequired where NoneType: StrictIntegrity {
 	
-	/// Create a `MaybeRequired` value with the specified necessity.
+	/// Create a `MaybeRequired` value with the specified integrity.
 	///
 	/// If your `Optional` is `.some` then the `MaybeRequired` will be as well.
 	///
-	/// If your `Optional` is `.none` then a `MaybeRequired<Necessary, _>` will
-	/// be `.none(.necessary)` and a `MaybeRequired<Unnecessary, _>` will be
-	/// `.none(.unnecessary)`
+	/// If your `Optional` is `.none` then a `MaybeRequired<BadIntegrity, _>` will
+	/// be `.none(.bad)` and a `MaybeRequired<GoodIntegrity, _>` will be
+	/// `.none(.good)`
 	public init(_ value: SomeType?) {
 		guard let trueValue = value else {
 			self = .none(NoneType())
@@ -48,27 +54,27 @@ public extension MaybeRequired where NoneType: StrictNecessity {
 
 public extension MaybeRequired {
 	
-	/// Map to another `MaybeRequired` of the same necessity.
+	/// Map to another `MaybeRequired` of the same integrity.
 	public func flatMap<SomeOtherType>(_ f: (SomeType) -> MaybeRequired<NoneType, SomeOtherType>) -> MaybeRequired<NoneType, SomeOtherType> {
 		switch self {
-		case .none(let necessity):
-			return .none(necessity)
+		case .none(let integrity):
+			return .none(integrity)
 			
 		case .some(let value):
 			return f(value)
 		}
 	}
 	
-	/// Map to another `MaybeRequired` of different necessity.
-	public func flatMap<U: Necessity, SomeOtherType>(_ f: (SomeType) -> MaybeRequired<U, SomeOtherType>) -> MaybeRequired<MaybeNecessary, SomeOtherType> {
+	/// Map to another `MaybeRequired` of different integrity.
+	public func flatMap<U, SomeOtherType>(_ f: (SomeType) -> MaybeRequired<U, SomeOtherType>) -> MaybeRequired<MaybeOK, SomeOtherType> {
 		switch self {
 		case .none(let maybeRequired):
-			return .none(maybeRequired.necessity)
+			return .none(maybeRequired.integrity)
 			
 		case .some(let value):
 			switch f(value) {
 			case .none(let maybeRequired):
-				return .none(maybeRequired.necessity)
+				return .none(maybeRequired.integrity)
 				
 			case .some(let value):
 				return .some(value)
@@ -76,9 +82,6 @@ public extension MaybeRequired {
 		}
 	}
 }
-
-// NOTE: With Swift 4, the following will be allowed:
-//extension MaybeRequired: Equatable where SomeType: Equatable {
 
 extension MaybeRequired where SomeType: Equatable {
 	public static func ==(lhs: MaybeRequired, rhs: MaybeRequired) -> Bool {
@@ -95,7 +98,6 @@ extension MaybeRequired where SomeType: Equatable {
 		}
 	}
 }
-
 
 extension MaybeRequired: CustomStringConvertible {
 	public var description: String {

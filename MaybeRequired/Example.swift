@@ -33,9 +33,6 @@ import Foundation
 // addressed here is whether there is currently a network call waiting to retrieve
 // `b` from the server.
 
-typealias Required<T> = MaybeRequired<Necessary, T>
-typealias NotRequired<T> = MaybeRequired<Unnecessary, T>
-
 struct Object {
 	// If this object is associated with another object, this value is a non-nil key by
 	// which the other object can be looked up in the datastore.
@@ -71,19 +68,19 @@ struct Example {
 }
 
 class ViewController {
-	func displayObject<T>(_ maybeObject: MaybeRequired<MaybeNecessary, T>, loadingState: LoadingState) {
+	func displayObject<T>(_ maybeObject: MaybeRequired<MaybeOK, T>, loadingState: LoadingState) {
 		
 		switch (maybeObject, loadingState) {
 		case (.some(let value), _):
 			print("Here is your information: \(value)")
 			
-		case (.none(.unnecessary), _):
+		case (.none(.good), _):
 			print("value not set")
 			
-		case (.none(.necessary), .loading):
+		case (.none(.bad), .loading):
 			print("loading")
 			
-		case (.none(.necessary), .error), (.none(.necessary), .done):
+		case (.none(.bad), .error), (.none(.bad), .done):
 			print("error")
 		}
 	}

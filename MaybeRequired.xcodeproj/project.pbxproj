@@ -11,7 +11,7 @@
 		C980918D1F1144BF00270796 /* MaybeRequiredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */; };
 		C980918F1F1144C000270796 /* MaybeRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = C98091811F1144BF00270796 /* MaybeRequired.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C98091991F11457500270796 /* MaybeRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98091981F11457500270796 /* MaybeRequired.swift */; };
-		C980919B1F1150E300270796 /* Necessity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980919A1F1150E300270796 /* Necessity.swift */; };
+		C980919B1F1150E300270796 /* Integrity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980919A1F1150E300270796 /* Integrity.swift */; };
 		C980919D1F1151A000270796 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980919C1F1151A000270796 /* Example.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +33,7 @@
 		C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaybeRequiredTests.swift; sourceTree = "<group>"; };
 		C980918E1F1144C000270796 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C98091981F11457500270796 /* MaybeRequired.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeRequired.swift; sourceTree = "<group>"; };
-		C980919A1F1150E300270796 /* Necessity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Necessity.swift; sourceTree = "<group>"; };
+		C980919A1F1150E300270796 /* Integrity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Integrity.swift; sourceTree = "<group>"; };
 		C980919C1F1151A000270796 /* Example.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,7 +80,7 @@
 				C98091981F11457500270796 /* MaybeRequired.swift */,
 				C98091811F1144BF00270796 /* MaybeRequired.h */,
 				C98091821F1144BF00270796 /* Info.plist */,
-				C980919A1F1150E300270796 /* Necessity.swift */,
+				C980919A1F1150E300270796 /* Integrity.swift */,
 				C980919C1F1151A000270796 /* Example.swift */,
 			);
 			path = MaybeRequired;
@@ -152,7 +152,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "Mathew Polzin";
 				TargetAttributes = {
 					C980917D1F1144BF00270796 = {
@@ -209,7 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C98091991F11457500270796 /* MaybeRequired.swift in Sources */,
-				C980919B1F1150E300270796 /* Necessity.swift in Sources */,
+				C980919B1F1150E300270796 /* Integrity.swift in Sources */,
 				C980919D1F1151A000270796 /* Example.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -243,7 +243,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -251,7 +253,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -281,6 +287,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -297,7 +304,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -305,7 +314,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -327,6 +340,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -350,8 +364,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpolzin.MaybeRequired;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -371,7 +383,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpolzin.MaybeRequired;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -384,7 +395,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpolzin.MaybeRequiredTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -397,7 +407,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpolzin.MaybeRequiredTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
