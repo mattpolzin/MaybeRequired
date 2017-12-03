@@ -47,40 +47,47 @@ enum LoadingState {
 
 struct Example {
 	var datastore: [String: Object]
-	var rootObject: Object
+	var rootObject: Required<Object>
 	var viewController: ViewController
 	
+	// called when a new network response has resulted in updates to the datastore
 	func dataLoaded() {
 		
-		// This is where the magic happens. We declare that `rootObject` is not
+		// This is where the magic happens. `rootObject` is not
 		// required to have an `otherObjectPointer`, but if it does then we
-		// declare that the `datastore` is required to contain the other object.
-		let maybeObject = NotRequired(rootObject.otherObjectPointer).flatMap { otherObjectKey in
-			Required(datastore[otherObjectKey])
+		// mandate that the `datastore` is required to contain the other object.
+		let maybeObject = rootObject.suppose { $0.otherObjectPointer }.require { otherObjectKey in
+			datastore[otherObjectKey]
 		}
+		
+		// Additionally, if maybeObject is found, there is a totally optional
+		// object hanging off of that.
+		let anotherObject = maybeObject.value?.otherObjectPointer.suppose { datastore[$0] }
 		
 		// we will just hard code the loading state for the sake of having one
 		// in this example:
 		let loadingState: LoadingState = .done
 		
-		viewController.displayObject(maybeObject, loadingState: loadingState)
+		viewController.displayObject(maybeObject, anotherObject, loadingState: loadingState)
 	}
 }
 
 class ViewController {
-	func displayObject<T>(_ maybeObject: MaybeRequired<MaybeOK, T>, loadingState: LoadingState) {
+	func displayObject<T>(_ maybeObject: MaybeRequired<T>, _ optionalAddition: T?, loadingState: LoadingState) {
 		
 		switch (maybeObject, loadingState) {
 		case (.some(let value), _):
 			print("Here is your information: \(value)")
 			
-		case (.none(.good), _):
+			// something about optionalAddition here
+			
+		case (.none, _):
 			print("value not set")
 			
-		case (.none(.bad), .loading):
+		case (.missing, .loading):
 			print("loading")
 			
-		case (.none(.bad), .error), (.none(.bad), .done):
+		case (.missing, .error), (.missing, .done):
 			print("error")
 		}
 	}

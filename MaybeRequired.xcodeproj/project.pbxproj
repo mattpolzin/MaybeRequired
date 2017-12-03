@@ -11,8 +11,11 @@
 		C980918D1F1144BF00270796 /* MaybeRequiredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */; };
 		C980918F1F1144C000270796 /* MaybeRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = C98091811F1144BF00270796 /* MaybeRequired.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C98091991F11457500270796 /* MaybeRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98091981F11457500270796 /* MaybeRequired.swift */; };
-		C980919B1F1150E300270796 /* Integrity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980919A1F1150E300270796 /* Integrity.swift */; };
 		C980919D1F1151A000270796 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = C980919C1F1151A000270796 /* Example.swift */; };
+		C9BB3C6D1FD3790B008B6D37 /* Required+MaybeRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB3C6C1FD3790B008B6D37 /* Required+MaybeRequired.swift */; };
+		C9BB3C6F1FD3791C008B6D37 /* Optional+MaybeRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB3C6E1FD3791C008B6D37 /* Optional+MaybeRequired.swift */; };
+		C9BB3C711FD379B3008B6D37 /* RequiredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB3C701FD379B3008B6D37 /* RequiredTests.swift */; };
+		C9BB3C731FD379C4008B6D37 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB3C721FD379C4008B6D37 /* OptionalTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,8 +36,11 @@
 		C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaybeRequiredTests.swift; sourceTree = "<group>"; };
 		C980918E1F1144C000270796 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C98091981F11457500270796 /* MaybeRequired.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeRequired.swift; sourceTree = "<group>"; };
-		C980919A1F1150E300270796 /* Integrity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Integrity.swift; sourceTree = "<group>"; };
 		C980919C1F1151A000270796 /* Example.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
+		C9BB3C6C1FD3790B008B6D37 /* Required+MaybeRequired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Required+MaybeRequired.swift"; sourceTree = "<group>"; };
+		C9BB3C6E1FD3791C008B6D37 /* Optional+MaybeRequired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+MaybeRequired.swift"; sourceTree = "<group>"; };
+		C9BB3C701FD379B3008B6D37 /* RequiredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiredTests.swift; sourceTree = "<group>"; };
+		C9BB3C721FD379C4008B6D37 /* OptionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,10 +83,11 @@
 		C98091801F1144BF00270796 /* MaybeRequired */ = {
 			isa = PBXGroup;
 			children = (
+				C9BB3C6C1FD3790B008B6D37 /* Required+MaybeRequired.swift */,
+				C9BB3C6E1FD3791C008B6D37 /* Optional+MaybeRequired.swift */,
 				C98091981F11457500270796 /* MaybeRequired.swift */,
 				C98091811F1144BF00270796 /* MaybeRequired.h */,
 				C98091821F1144BF00270796 /* Info.plist */,
-				C980919A1F1150E300270796 /* Integrity.swift */,
 				C980919C1F1151A000270796 /* Example.swift */,
 			);
 			path = MaybeRequired;
@@ -90,6 +97,8 @@
 			isa = PBXGroup;
 			children = (
 				C980918C1F1144BF00270796 /* MaybeRequiredTests.swift */,
+				C9BB3C701FD379B3008B6D37 /* RequiredTests.swift */,
+				C9BB3C721FD379C4008B6D37 /* OptionalTests.swift */,
 				C980918E1F1144C000270796 /* Info.plist */,
 			);
 			path = MaybeRequiredTests;
@@ -208,9 +217,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9BB3C6D1FD3790B008B6D37 /* Required+MaybeRequired.swift in Sources */,
 				C98091991F11457500270796 /* MaybeRequired.swift in Sources */,
-				C980919B1F1150E300270796 /* Integrity.swift in Sources */,
 				C980919D1F1151A000270796 /* Example.swift in Sources */,
+				C9BB3C6F1FD3791C008B6D37 /* Optional+MaybeRequired.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +228,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9BB3C711FD379B3008B6D37 /* RequiredTests.swift in Sources */,
 				C980918D1F1144BF00270796 /* MaybeRequiredTests.swift in Sources */,
+				C9BB3C731FD379C4008B6D37 /* OptionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

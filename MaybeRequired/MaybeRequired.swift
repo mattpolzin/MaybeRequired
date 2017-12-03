@@ -7,94 +7,161 @@
 
 import Foundation
 
-/// A `Required<T>` value is either `.some(T)` or `.none(.bad)`
-public typealias Required<T> = MaybeRequired<BadIntegrity, T>
-
-/// A `NotRequired<T>` value is either `.some(T)` or `.none(.good)`
-public typealias NotRequired<T> = MaybeRequired<GoodIntegrity, T>
-
-/// A `MaybeRequired` value is one of:
-/// - `.some(T)`
-/// - `.none(Integrity)`
-///
-/// The builtin integrities are `BadIntegrity` and `GoodIntegrity` which get you
-/// `.none(.bad)` and `.none(.good)`, respectively.
-///
-/// If you `flatMap` from one `MaybeRequired<BadIntegrity, _>` to another,
-/// your result will be a `MaybeRequired<BadIntegrity, _>`.
-///
-/// If you `flatMap` from one `MaybeRequired<GoodIntegrity, _>` to another your
-/// result will be a `MaybeRequired<GoodIntegrity, _>`.
-///
-/// However, if you `flatMap` from a `BadIntegrity` to a `GoodIntegrity` or
-/// vice versa then your result will be a `MaybeRequired<MaybeOK, _>`.
-public enum MaybeRequired<NoneType: Integrity, SomeType> {
-	case none(NoneType)
-	case some(SomeType)
+/// If something `CanBeMaybeRequired` then it can be represented as one of:
+/// - `.some(value)`
+/// - `.none`
+/// - `.missing`
+public protocol CanBeMaybeRequired {
+	associatedtype Wrapped
+	
+	var maybeRequired: MaybeRequired<Wrapped> { get }
+	
+	/// Something `isMissing` if it should have a value but it is `nil`.
+	var isMissing: Bool { get }
+	
+	var value: Wrapped? { get }
 }
 
-public extension MaybeRequired where NoneType: StrictIntegrity {
-	
-	/// Create a `MaybeRequired` value with the specified integrity.
-	///
-	/// If your `Optional` is `.some` then the `MaybeRequired` will be as well.
-	///
-	/// If your `Optional` is `.none` then a `MaybeRequired<BadIntegrity, _>` will
-	/// be `.none(.bad)` and a `MaybeRequired<GoodIntegrity, _>` will be
-	/// `.none(.good)`
-	public init(_ value: SomeType?) {
-		guard let trueValue = value else {
-			self = .none(NoneType())
-			return
+public extension CanBeMaybeRequired {
+	/// Something `isMissing` if it should have a value but it is `nil`.
+	var isMissing: Bool {
+		guard case .missing = maybeRequired else {
+			return false
 		}
-		
-		self = .some(trueValue)
+		return true
 	}
+	
+	var value: Wrapped? {
+		guard case .some(let value) = maybeRequired else {
+			return nil
+		}
+		return value
+	}
+}
+
+/// If something is `Binary` then it provides a mapping from Optional's `.none`
+/// and `.some(value)` to its own binary representation.
+public protocol Binary {
+	associatedtype Wrapped
+	
+	init(fromOptional: Wrapped?)
+}
+
+public enum MaybeRequired<Wrapped> {
+	case some(Wrapped)
+	case none
+	case missing
+}
+
+extension MaybeRequired: CanBeMaybeRequired {
+	public var maybeRequired: MaybeRequired<Wrapped> { return self }
 }
 
 public extension MaybeRequired {
 	
-	/// Map to another `MaybeRequired` of the same integrity.
-	public func flatMap<SomeOtherType>(_ f: (SomeType) -> MaybeRequired<NoneType, SomeOtherType>) -> MaybeRequired<NoneType, SomeOtherType> {
+	func map<NewWrapped>(fn: (Wrapped) -> NewWrapped) -> MaybeRequired<NewWrapped> {
 		switch self {
-		case .none(let integrity):
-			return .none(integrity)
-			
 		case .some(let value):
-			return f(value)
+			return .some(fn(value))
+		case .none:
+			return .none
+		case .missing:
+			return .missing
 		}
 	}
 	
-	/// Map to another `MaybeRequired` of different integrity.
-	public func flatMap<U, SomeOtherType>(_ f: (SomeType) -> MaybeRequired<U, SomeOtherType>) -> MaybeRequired<MaybeOK, SomeOtherType> {
+	func flatMap<NewWrapped>(fn: (Wrapped) -> MaybeRequired<NewWrapped>) -> MaybeRequired<NewWrapped> {
 		switch self {
-		case .none(let maybeRequired):
-			return .none(maybeRequired.integrity)
-			
 		case .some(let value):
-			switch f(value) {
-			case .none(let maybeRequired):
-				return .none(maybeRequired.integrity)
-				
-			case .some(let value):
-				return .some(value)
-			}
+			return fn(value)
+		case .none:
+			return .none
+		case .missing:
+			return .missing
+		}
+	}
+	
+	/// Given that `Self` is `.missing`, the return is `MaybeRequired.missing`
+	///
+	/// Given that `Self` is `.none`, the return is `MaybeRequired.none`
+	///
+	/// Given that `Self` is `.some(value)`, the return is `MaybeRequired.missing` or
+	/// `MaybeRequired.some(fn(value))` depending on the output of `fn(value)`
+	///
+	/// - parameter fn: A function returning a required value or `nil`
+	func require<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
+		switch self {
+		case .some(let value):
+			return Required<NewWrapped>(fromOptional: fn(value)).maybeRequired
+		case .none:
+			return .none
+		case .missing:
+			return .missing
+		}
+	}
+	
+	/// Given that `Self` is `.missing`, the return is `MaybeRequired.missing`
+	///
+	/// Given that `Self` is `.none`, the return is `MaybeRequired.none`
+	///
+	/// Given that `Self` is `.some(value)`, the return is `MaybeRequired.none` or
+	/// `MaybeRequired.some(fn(value))` depending on the output of `fn(value)`
+	///
+	/// - parameter fn: A function returning an optional value or `nil`
+	func suppose<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
+		switch self {
+		case .some(let value):
+			return fn(value).maybeRequired
+		case .none:
+			return .none
+		case .missing:
+			return .missing
 		}
 	}
 }
 
-extension MaybeRequired where SomeType: Equatable {
-	public static func ==(lhs: MaybeRequired, rhs: MaybeRequired) -> Bool {
-		switch lhs {
-		case .none(let leftValue):
-			guard case .none(let rightValue) = rhs else { return false }
+public extension MaybeRequired where Wrapped: Equatable {
+	/// MaybeRequired.some(value) is equal to Optional.some(value) for the
+	/// same value and MaybeRequired.none is equal to Optional.none. However,
+	/// MaybeRequired.missing is not equal to Optional.none
+	static func ==(lhs: MaybeRequired<Wrapped>, rhs: Optional<Wrapped>) -> Bool {
+		switch (lhs, rhs) {
+		case (.some(let value1), .some(let value2)) where value1 == value2:
+			return true
+		case (.none, .none):
+			return true
 			
-			return leftValue == rightValue
+		default:
+			return false
+		}
+	}
+	
+	/// MaybeRequired.some(value) is equal to Required.some(value) for the same
+	/// value and MaybeRequired.missing is equal to Required.missing. However,
+	/// MaybeRequired.none is not equal to Required.missing
+	static func ==(lhs: MaybeRequired<Wrapped>, rhs: Required<Wrapped>) -> Bool {
+		switch (lhs, rhs) {
+		case (.some(let value1), .some(let value2)) where value1 == value2:
+			return true
+		case (.missing, .missing):
+			return true
 			
-		case .some(let leftValue):
-			guard case .some(let rightValue) = rhs else { return false }
+		default:
+			return false
+		}
+	}
+	
+	static func ==(lhs: MaybeRequired<Wrapped>, rhs: MaybeRequired<Wrapped>) -> Bool {
+		switch (lhs, rhs) {
+		case (.some(let value1), .some(let value2)) where value1 == value2:
+			return true
+		case (.missing, .missing):
+			return true
+		case (.none, .none):
+			return true
 			
-			return leftValue == rightValue
+		default:
+			return false
 		}
 	}
 }
@@ -102,10 +169,12 @@ extension MaybeRequired where SomeType: Equatable {
 extension MaybeRequired: CustomStringConvertible {
 	public var description: String {
 		switch self {
-		case .none(let noneValue):
-			return ".none(\(noneValue))"
-		case .some(let someValue):
-			return ".some(\(someValue))"
+		case .some(let value):
+			return "MaybeRequired(\(value))"
+		case .none:
+			return "MaybeRequired(none)"
+		case .missing:
+			return "MaybeRequired(missing)"
 		}
 	}
 }
