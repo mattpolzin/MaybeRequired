@@ -11,74 +11,145 @@ import MaybeRequired
 class MaybeRequiredTests: XCTestCase {
 	
 	let string: String? = "hello"
+	lazy var maybeRequiredString: MaybeRequired<String> = .some(string!)
 	let noString: String? = nil
 	
 	let string2: String? = "world"
+	lazy var maybeRequiredString2: MaybeRequired<String> = .some(string2!)
 	let map = ["hello": "HELLO"]
 	
-	func test_nonRequiredString() {
+	func test_isMissing() {
+		XCTAssertTrue(MaybeRequired<String>.missing.isMissing)
 		
-		let intentionalString1 = NotRequired(string)
-		XCTAssert(intentionalString1 == MaybeRequired<GoodIntegrity, String>.some(string!))
-		
-		let intentionalString2 = NotRequired(noString)
-		XCTAssert(intentionalString2 == MaybeRequired<GoodIntegrity, String>.none(.good))
+		XCTAssertFalse(MaybeRequired<String>.none.isMissing)
+		XCTAssertFalse(maybeRequiredString.isMissing)
 	}
 	
-	func test_requiredString() {
+	func test_value() {
+		XCTAssertNil(MaybeRequired<String>.none.value)
+		XCTAssertNil(MaybeRequired<String>.missing.value)
 		
-		let intentionalString3 = Required(string)
-		XCTAssert(intentionalString3 == MaybeRequired<BadIntegrity, String>.some(string!))
-		
-		let intentionalString4 = Required(noString)
-		XCTAssert(intentionalString4 == MaybeRequired<BadIntegrity, String>.none(.bad))
+		XCTAssertEqual(maybeRequiredString.value, string)
 	}
 	
-	func test_requiredKeyToRequiredValue() {
+	func test_maybeRequired() {
+		let maybeRequired1 = maybeRequiredString.maybeRequired
+		guard case .some(let str) = maybeRequired1,
+			str == string! else {
+				XCTFail("MaybeRequired from MaybeRequired with Optional.some failed")
+				return
+		}
 		
-		let intentionalMapping1 = Required(string).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping1 == MaybeRequired<BadIntegrity, String>.some(map[string!]!))
+		let maybeRequired2 = MaybeRequired<String>.missing.maybeRequired
+		guard case .missing = maybeRequired2 else {
+			XCTFail("MaybeRequired from MaybeRequired.missing failed")
+			return
+		}
 		
-		let intentionalMapping2 = Required(noString).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping2 == MaybeRequired<BadIntegrity, String>.none(.bad))
-		
-		let intentionalMapping3 = Required(string2).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping3 == MaybeRequired<BadIntegrity, String>.none(.bad))
+		let maybeRequired3 = MaybeRequired<String>.none.maybeRequired
+		guard case .none = maybeRequired3 else {
+			XCTFail("MaybeRequired from MaybeRequired.none failed")
+			return
+		}
 	}
 	
-	func test_optionalKeyToOptionalValue() {
-	
-		let intentionalMapping4 = NotRequired(string).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping4 == MaybeRequired<GoodIntegrity, String>.some(map[string!]!))
+	func test_map() {
+		let requiredNumber = maybeRequiredString.map { $0.count }
+		guard case .some(let number) = requiredNumber else {
+			XCTFail("MaybeRequired.some did not map to MaybeRequired.some")
+			return
+		}
+		XCTAssertTrue(type(of: number) == type(of: string!.count))
+		XCTAssertTrue(type(of: requiredNumber) == MaybeRequired<String.IndexDistance>.self)
 		
-		let intentionalMapping5 = NotRequired(noString).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping5 == MaybeRequired<GoodIntegrity, String>.none(.good))
+		let requiredNumber2 = MaybeRequired<String>.missing.map { $0.count }
+		guard case .missing = requiredNumber2 else {
+			XCTFail("MaybeRequired.missing did not map to MaybeRequired.missing")
+			return
+		}
+		XCTAssertTrue(type(of: requiredNumber2) == MaybeRequired<String.IndexDistance>.self)
 		
-		let intentionalMapping6 = NotRequired(string2).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping6 == MaybeRequired<GoodIntegrity, String>.none(.good))
+		let requiredNumber3 = MaybeRequired<String>.none.map { $0.count }
+		guard case .none = requiredNumber3 else {
+			XCTFail("MaybeRequired.none did not map to MaybeRequired.none")
+			return
+		}
+		XCTAssertTrue(type(of: requiredNumber3) == MaybeRequired<String.IndexDistance>.self)
 	}
 	
-	func test_requiredKeyToOptionalValue() {
-	
-		let intentionalMapping7 = Required(string).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping7 == MaybeRequired<MaybeOK, String>.some(map[string!]!))
+	func test_flatMap() {
+		let requiredNumber = maybeRequiredString.flatMap { .some($0.count) }
+		guard case .some(let number) = requiredNumber else {
+			XCTFail("MaybeRequired.some did not flatMap to MaybeRequired.some")
+			return
+		}
+		XCTAssertTrue(type(of: number) == type(of: string!.count))
+		XCTAssertTrue(type(of: requiredNumber) == MaybeRequired<String.IndexDistance>.self)
 		
-		let intentionalMapping8 = Required(noString).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping8 == MaybeRequired<MaybeOK, String>.none(.bad))
+		let requiredNumber2 = MaybeRequired<String>.missing.flatMap { .some($0.count) }
+		guard case .missing = requiredNumber2 else {
+			XCTFail("MaybeRequired.missing did not flatMap to MaybeRequired.missing")
+			return
+		}
+		XCTAssertTrue(type(of: requiredNumber2) == MaybeRequired<String.IndexDistance>.self)
 		
-		let intentionalMapping9 = Required(string2).flatMap { NotRequired(map[$0]) }
-		XCTAssert(intentionalMapping9 == MaybeRequired<MaybeOK, String>.none(.good))
+		let requiredNumber3 = MaybeRequired<String>.none.flatMap { .some($0.count) }
+		guard case .none = requiredNumber3 else {
+			XCTFail("MaybeRequired.none did not flatMap to MaybeRequired.none")
+			return
+		}
+		XCTAssertTrue(type(of: requiredNumber3) == MaybeRequired<String.IndexDistance>.self)
 	}
 	
-	func test_optionalKeyToRequiredValue() {
+	func test_require() {
+		let requiredString1 = maybeRequiredString.require { map[$0] }
+		guard case .some(let str) = requiredString1 else {
+			XCTFail("MaybeRequired.some requiring Optional.some failed")
+			return
+		}
+		XCTAssertEqual(str, map[string!]!)
+		
+		let requiredString2 = maybeRequiredString2.require { map[$0] }
+		guard case .missing = requiredString2 else {
+			XCTFail("MaybeRequired.some requiring Optional.none failed")
+			return
+		}
+	}
 	
-		let intentionalMapping10 = NotRequired(string).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping10 == MaybeRequired<MaybeOK, String>.some(map[string!]!))
+	func test_suppose() {
+		let optionalString1 = maybeRequiredString.suppose { map[$0] }
+		guard case .some(let str) = optionalString1 else {
+			XCTFail("MaybeRequired.some supposing Optional.some failed")
+			return
+		}
+		XCTAssertEqual(str, map[string!]!)
 		
-		let intentionalMapping11 = NotRequired(noString).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping11 == MaybeRequired<MaybeOK, String>.none(.good))
+		let optionalString2 = maybeRequiredString2.suppose { map[$0] }
+		guard case .none = optionalString2 else {
+			XCTFail("MaybeRequired.some supposing Optional.none failed")
+			return
+		}
+	}
+	
+	func test_equality() {
+		XCTAssertFalse(MaybeRequired<Int>.some(1) == MaybeRequired<Int>.some(2))
+		XCTAssertFalse(MaybeRequired<Int>.missing == MaybeRequired<Int>.some(2))
+		XCTAssertFalse(MaybeRequired<Int>.none == MaybeRequired<Int>.some(2))
+		XCTAssertFalse(MaybeRequired<Int>.none == MaybeRequired<Int>.missing)
 		
-		let intentionalMapping12 = NotRequired(string2).flatMap { Required(map[$0]) }
-		XCTAssert(intentionalMapping12 == MaybeRequired<MaybeOK, String>.none(.bad))
+		XCTAssertTrue(MaybeRequired<Int>.some(1) == MaybeRequired<Int>.some(1))
+		XCTAssertTrue(MaybeRequired<Int>.missing == MaybeRequired<Int>.missing)
+		XCTAssertTrue(MaybeRequired<Int>.none == MaybeRequired<Int>.none)
+	}
+	
+	func test_optionalEquality() {
+		XCTAssertFalse(MaybeRequired<Int>.some(1) == Optional<Int>.some(2))
+		XCTAssertFalse(MaybeRequired<Int>.missing == Optional<Int>.some(2))
+		XCTAssertFalse(MaybeRequired<Int>.missing == Optional<Int>.none)
+		XCTAssertFalse(MaybeRequired<Int>.missing == nil)
+		
+		XCTAssertTrue(MaybeRequired<Int>.some(1) == Optional<Int>.some(1))
+		XCTAssertTrue(MaybeRequired<Int>.none == Optional<Int>.none)
+		XCTAssertTrue(MaybeRequired<Int>.none == nil)
 	}
 }
