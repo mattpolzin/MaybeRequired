@@ -19,19 +19,33 @@ public protocol CanBeMaybeRequired {
 	/// Something `isMissing` if it should have a value but it is `nil`.
 	var isMissing: Bool { get }
 	
+	/// If `isMissing == true`, this will be the type of value that is missing.
+	/// If `isMissing == false`, this will be `Void`
+	var missingType: Any.Type { get }
+	
+	/// If `.some(Wrapped)` then this will retrieve it. In all other cases, this
+	/// is nil.
 	var value: Wrapped? { get }
 }
 
 public extension CanBeMaybeRequired {
 	/// Something `isMissing` if it should have a value but it is `nil`.
-	var isMissing: Bool {
+	public var isMissing: Bool {
 		guard case .missing = maybeRequired else {
 			return false
 		}
 		return true
 	}
 	
-	var value: Wrapped? {
+	public var missingType: Any.Type {
+		guard case .missing(let missingType) = maybeRequired else {
+			return Void.self
+		}
+		
+		return missingType
+	}
+	
+	public var value: Wrapped? {
 		guard case .some(let value) = maybeRequired else {
 			return nil
 		}
@@ -69,7 +83,7 @@ public protocol Binary {
 public enum MaybeRequired<Wrapped> {
 	case some(Wrapped)
 	case none
-	case missing
+	case missing(type: Any.Type) // stores the type of the missing value
 }
 
 extension MaybeRequired: CanBeMaybeRequired {
@@ -78,25 +92,29 @@ extension MaybeRequired: CanBeMaybeRequired {
 
 public extension MaybeRequired {
 	
-	func map<NewWrapped>(fn: (Wrapped) -> NewWrapped) -> MaybeRequired<NewWrapped> {
+	public static var missing: MaybeRequired {
+		return .missing(type: Wrapped.self)
+	}
+	
+	public func map<NewWrapped>(fn: (Wrapped) -> NewWrapped) -> MaybeRequired<NewWrapped> {
 		switch self {
 		case .some(let value):
 			return .some(fn(value))
 		case .none:
 			return .none
-		case .missing:
-			return .missing
+		case .missing(let missingType):
+			return .missing(type: missingType)
 		}
 	}
 	
-	func flatMap<NewWrapped>(fn: (Wrapped) -> MaybeRequired<NewWrapped>) -> MaybeRequired<NewWrapped> {
+	public func flatMap<NewWrapped>(fn: (Wrapped) -> MaybeRequired<NewWrapped>) -> MaybeRequired<NewWrapped> {
 		switch self {
 		case .some(let value):
 			return fn(value)
 		case .none:
 			return .none
-		case .missing:
-			return .missing
+		case .missing(let missingType):
+			return .missing(type: missingType)
 		}
 	}
 	
@@ -108,14 +126,14 @@ public extension MaybeRequired {
 	/// `MaybeRequired.some(fn(value))` depending on the output of `fn(value)`
 	///
 	/// - parameter fn: A function returning a required value or `nil`
-	func require<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
+	public func require<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
 		switch self {
 		case .some(let value):
 			return Required<NewWrapped>(fromOptional: fn(value)).maybeRequired
 		case .none:
 			return .none
-		case .missing:
-			return .missing
+		case .missing(let missingType):
+			return .missing(type: missingType)
 		}
 	}
 	
@@ -127,14 +145,14 @@ public extension MaybeRequired {
 	/// `MaybeRequired.some(fn(value))` depending on the output of `fn(value)`
 	///
 	/// - parameter fn: A function returning an optional value or `nil`
-	func suppose<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
+	public func suppose<NewWrapped>(fn: (Wrapped) -> NewWrapped?) -> MaybeRequired<NewWrapped> {
 		switch self {
 		case .some(let value):
 			return fn(value).maybeRequired
 		case .none:
 			return .none
-		case .missing:
-			return .missing
+		case .missing(let missingType):
+			return .missing(type: missingType)
 		}
 	}
 }
@@ -146,8 +164,8 @@ extension MaybeRequired: CustomStringConvertible {
 			return "MaybeRequired(\(value))"
 		case .none:
 			return "MaybeRequired(none)"
-		case .missing:
-			return "MaybeRequired(missing)"
+		case .missing(let missingType):
+			return "MaybeRequired(missing: \(missingType))"
 		}
 	}
 }

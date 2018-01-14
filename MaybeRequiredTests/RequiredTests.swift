@@ -45,6 +45,12 @@ class RequiredTests: XCTestCase {
 		XCTAssertFalse(Required(fromOptional: string).isMissing)
 	}
 	
+	func test_missingType() {
+		XCTAssertTrue(Required<Int>.some(2).missingType is Void.Type)
+		
+		XCTAssertTrue(Required<Int>.missing.missingType is Int.Type)
+	}
+	
 	func test_value() {
 		XCTAssertNil(Required<String>.missing.value)
 		
@@ -143,7 +149,6 @@ class RequiredTests: XCTestCase {
 		XCTAssertFalse(Required<Int>.some(1) == Optional<Int>.some(2))
 		XCTAssertFalse(Required<Int>.missing == Optional<Int>.some(2))
 		XCTAssertFalse(Required<Int>.missing == Optional<Int>.none)
-		XCTAssertFalse(Required<Int>.missing == nil)
 		
 		XCTAssertTrue(Required<Int>.some(1) == Optional<Int>.some(1))
 	}

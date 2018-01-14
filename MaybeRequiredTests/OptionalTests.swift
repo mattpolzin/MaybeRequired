@@ -21,6 +21,12 @@ class OptionalTests: XCTestCase {
 		XCTAssertFalse(string.isMissing)
 	}
 	
+	func test_missingType() {
+		XCTAssertTrue(Optional<Int>.some(2).missingType is Void.Type)
+		
+		XCTAssertTrue(Optional<Int>.none.missingType is Void.Type)
+	}
+	
 	func test_value() {
 		XCTAssertNil(Optional<String>.none.value)
 		

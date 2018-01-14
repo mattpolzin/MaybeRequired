@@ -25,6 +25,13 @@ class MaybeRequiredTests: XCTestCase {
 		XCTAssertFalse(maybeRequiredString.isMissing)
 	}
 	
+	func test_missingType() {
+		XCTAssertTrue(MaybeRequired<Int>.some(2).missingType is Void.Type)
+		XCTAssertTrue(MaybeRequired<Int>.none.missingType is Void.Type)
+		
+		XCTAssertTrue(MaybeRequired<Int>.missing.missingType is Int.Type)
+	}
+	
 	func test_value() {
 		XCTAssertNil(MaybeRequired<String>.none.value)
 		XCTAssertNil(MaybeRequired<String>.missing.value)
