@@ -1,6 +1,6 @@
 # MaybeRequired
 ## Motivation
-This library introduces the `Required` type as a companion to the built-in `Optional` type. The concenpt of `Required` values is useful for encoding into a type whether values retrieved from a server API are "optional" (i.e. set or not) or "required" (i.e. necessarily set, but maybe not available to the client because of a server error, network error, or client programmer error). Any piece of code operating on a `Required` value knows that the absense of the wrapped value represents an error. 
+This library introduces the `Required` type as a companion to the built-in `Optional` type. The concenpt of `Required` values is useful for encoding into a type whether values retrieved from a server API are "optional" (i.e. set or not) or "required" (i.e. necessarily set, but maybe not available to the client because of a server error, network error, user error, or client programmer error). Any piece of code operating on a `Required` value knows that the absense of the wrapped value represents an error. 
 
 ## Alternatives Compared
 This is essentially a specialization of the popular `Result` type, but `MaybeRequired` makes it effortless to map between `Optional` and `Required` types without needing to represent `Optional`'s `.none` case as an `Error` type. Therefore, it is even easier to draw a parallel between `MaybeRequired` and another popular type, `Either`. 
