@@ -71,4 +71,13 @@ class OptionalTests: XCTestCase {
 			return
 		}
 	}
+	
+	func test_maybeRequiredEquality() {
+		XCTAssertFalse(Optional<Int>.some(2) == MaybeRequired<Int>.some(1))
+		XCTAssertFalse(Optional<Int>.some(2) == MaybeRequired<Int>.missing)
+		XCTAssertFalse(Optional<Int>.none == MaybeRequired<Int>.missing)
+		
+		XCTAssertTrue(Optional<Int>.some(1) == MaybeRequired<Int>.some(1))
+		XCTAssertTrue(Optional<Int>.none == MaybeRequired<Int>.none)
+	}
 }

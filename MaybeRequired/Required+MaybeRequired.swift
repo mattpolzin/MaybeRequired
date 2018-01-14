@@ -88,31 +88,6 @@ public extension Required {
 	}
 }
 
-public extension Required where Wrapped: Equatable {
-	/// Required.some(let value) is equal to Optional.some(let value) for the
-	/// same value. However, Required.missing is not equal to Optional.none
-	static func ==(lhs: Required<Wrapped>, rhs: Optional<Wrapped>) -> Bool {
-		guard case .some(let value1) = lhs,
-			case .some(let value2) = rhs,
-			value1 == value2 else {
-				return false
-		}
-		return true
-	}
-	
-	static func ==(lhs: Required<Wrapped>, rhs: Required<Wrapped>) -> Bool {
-		switch (lhs, rhs) {
-		case (.some(let value1), .some(let value2)) where value1 == value2:
-			return true
-		case (.missing, .missing):
-			return true
-			
-		default:
-			return false
-		}
-	}
-}
-
 extension Required: CustomStringConvertible {
 	public var description: String {
 		switch self {

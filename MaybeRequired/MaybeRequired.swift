@@ -39,6 +39,25 @@ public extension CanBeMaybeRequired {
 	}
 }
 
+/// Any two things that CanBeMaybeRequired and wrap the same type can be compared.
+/// .some(v1) == .some(v2) IF v1 == v2
+/// .missing == .missing
+/// .none == .none
+/// .missing != .none
+public func ==<T1: CanBeMaybeRequired, T2: CanBeMaybeRequired>(lhs: T1, rhs: T2) -> Bool where T1.Wrapped: Equatable, T2.Wrapped == T1.Wrapped {
+	switch (lhs.maybeRequired, rhs.maybeRequired) {
+	case (.some(let value1), .some(let value2)) where value1 == value2:
+		return true
+	case (.missing, .missing):
+		return true
+	case (.none, .none):
+		return true
+		
+	default:
+		return false
+	}
+}
+
 /// If something is `Binary` then it provides a mapping from Optional's `.none`
 /// and `.some(value)` to its own binary representation.
 public protocol Binary {
@@ -116,52 +135,6 @@ public extension MaybeRequired {
 			return .none
 		case .missing:
 			return .missing
-		}
-	}
-}
-
-public extension MaybeRequired where Wrapped: Equatable {
-	/// MaybeRequired.some(value) is equal to Optional.some(value) for the
-	/// same value and MaybeRequired.none is equal to Optional.none. However,
-	/// MaybeRequired.missing is not equal to Optional.none
-	static func ==(lhs: MaybeRequired<Wrapped>, rhs: Optional<Wrapped>) -> Bool {
-		switch (lhs, rhs) {
-		case (.some(let value1), .some(let value2)) where value1 == value2:
-			return true
-		case (.none, .none):
-			return true
-			
-		default:
-			return false
-		}
-	}
-	
-	/// MaybeRequired.some(value) is equal to Required.some(value) for the same
-	/// value and MaybeRequired.missing is equal to Required.missing. However,
-	/// MaybeRequired.none is not equal to Required.missing
-	static func ==(lhs: MaybeRequired<Wrapped>, rhs: Required<Wrapped>) -> Bool {
-		switch (lhs, rhs) {
-		case (.some(let value1), .some(let value2)) where value1 == value2:
-			return true
-		case (.missing, .missing):
-			return true
-			
-		default:
-			return false
-		}
-	}
-	
-	static func ==(lhs: MaybeRequired<Wrapped>, rhs: MaybeRequired<Wrapped>) -> Bool {
-		switch (lhs, rhs) {
-		case (.some(let value1), .some(let value2)) where value1 == value2:
-			return true
-		case (.missing, .missing):
-			return true
-		case (.none, .none):
-			return true
-			
-		default:
-			return false
 		}
 	}
 }

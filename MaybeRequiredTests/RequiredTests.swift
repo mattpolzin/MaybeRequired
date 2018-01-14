@@ -131,6 +131,7 @@ class RequiredTests: XCTestCase {
 	}
 	
 	func test_equality() {
+		
 		XCTAssertFalse(Required<Int>.some(1) == Required<Int>.some(2))
 		XCTAssertFalse(Required<Int>.missing == Required<Int>.some(2))
 		
@@ -145,5 +146,14 @@ class RequiredTests: XCTestCase {
 		XCTAssertFalse(Required<Int>.missing == nil)
 		
 		XCTAssertTrue(Required<Int>.some(1) == Optional<Int>.some(1))
+	}
+	
+	func test_maybeRequiredEquality() {
+		XCTAssertFalse(Required<Int>.some(1) == MaybeRequired<Int>.some(2))
+		XCTAssertFalse(Required<Int>.missing == MaybeRequired<Int>.some(2))
+		XCTAssertFalse(Required<Int>.missing == MaybeRequired<Int>.none)
+		
+		XCTAssertTrue(Required<Int>.some(1) == MaybeRequired<Int>.some(1))
+		XCTAssertTrue(Required<Int>.missing == MaybeRequired<Int>.missing)
 	}
 }
