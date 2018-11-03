@@ -5,8 +5,6 @@
 //  Created by Mathew Polzin on 12/2/17.
 //
 
-import Foundation
-
 public enum Required<Wrapped> {
 	case some(Wrapped)
 	case missing(type: Any.Type) // The type of value that is missing

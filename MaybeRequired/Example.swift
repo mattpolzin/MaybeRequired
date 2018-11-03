@@ -5,8 +5,6 @@
 //  Created by Mathew Polzin on 7/8/17.
 //
 
-import Foundation
-
 // The following is intended to show a simplified example of real usage.
 
 // Imagine having a datastore of objects that have been (or will be) retrieved

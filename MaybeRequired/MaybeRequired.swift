@@ -5,8 +5,6 @@
 //  Created by Mathew Polzin on 7/8/17.
 //
 
-import Foundation
-
 /// If something `CanBeMaybeRequired` then it can be represented as one of:
 /// - `.some(value)`
 /// - `.none`

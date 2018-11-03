@@ -5,8 +5,6 @@
 //  Created by Mathew Polzin on 12/2/17.
 //
 
-import Foundation
-
 extension Optional: Binary {
 	public init(fromOptional value: Wrapped?) {
 		guard let value = value else {
