@@ -1,4 +1,6 @@
 # MaybeRequired
+[![Build Status](https://app.bitrise.io/app/06779980531377cd/status.svg?token=W0a5g6rOZJhvt9UHzzZ4xA&branch=master)](https://app.bitrise.io/app/06779980531377cd)
+
 ## Motivation
 This library introduces the `Required` type as a companion to the built-in `Optional` type. The concenpt of `Required` values is useful for encoding into a type whether values retrieved from a server API are "optional" (i.e. set or not) or "required" (i.e. necessarily set, but maybe not available to the client because of a server error, network error, user error, or client programmer error). Any piece of code operating on a `Required` value knows that the absense of the wrapped value represents an error. 
 
